@@ -149,12 +149,12 @@ print(f"\nBuilt {len(laptops)} laptops ({skipped} skipped)")
 
 existing=[]
 if os.path.exists("laptops_2.json"):
-    with open("laptops_2.json","r",encoding="utf-8") as f: existing=json.load(f)
+    with open("laptops_2.json","r",encoding="utf-8-sig") as f: existing=json.load(f)
     print(f"Existing library: {len(existing)}")
 keys={(l["brand"].lower(),l["model"].lower()) for l in existing}
 new=[l for l in laptops if (l["brand"].lower(),l["model"].lower()) not in keys]
 print(f"New laptops to add: {len(new)}")
 combined=existing+new
-with open("laptops_2.json","w",encoding="utf-8") as f: json.dump(combined,f,indent=2,ensure_ascii=False)
+with open("laptops_2.json","w",encoding="utf-8") as f: json.dump(combined,f,indent=2,ensure_ascii=False,default=str)
 print(f"\nDone! laptops_2.json: {len(combined)} total")
 print("Upload laptops_2.json to Netlify to go live!")
