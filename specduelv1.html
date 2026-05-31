@@ -501,16 +501,6 @@
         box-shadow: 0 0 22px rgba(255, 153, 0, 0.5);
         transform: translateY(-2px);
       }
-      .buy-btn-ebay {
-        background: linear-gradient(135deg, #86b817, #6a9312);
-        color: #fff;
-        box-shadow: 0 0 14px rgba(134, 184, 23, 0.3);
-      }
-      .buy-btn-ebay:hover {
-        background: linear-gradient(135deg, #97cc1a, #86b817);
-        box-shadow: 0 0 22px rgba(134, 184, 23, 0.5);
-        transform: translateY(-2px);
-      }
 
       /* ── ADD TO DUEL BUTTON ── */
       .add-duel-btn {
@@ -1291,7 +1281,6 @@
 
       // ── AFFILIATE CONFIG — swap these when approved ──
       const AMAZON_TAG = "muxdev7772-20";
-      const EBAY_CAMPAIGN = "5339089845";
 
       let laptops = [];
       let activeCategory = null;
@@ -1322,16 +1311,10 @@
       // ── AFFILIATE BUY LINKS ──
       function makeBuyLinks(brand, model) {
         const q = encodeURIComponent(brand + " " + model);
-        const amazonUrl =
-          "https://www.amazon.com/s?k=" + q + "&tag=" + AMAZON_TAG;
-        const ebayUrl =
-          "https://www.ebay.com/sch/i.html?_nkw=" +
-          q +
-          "&mkevt=1&mkcid=1&mkrid=711-53200-19255-0&campid=" +
-          EBAY_CAMPAIGN;
+        const amazonUrl = "https://www.amazon.com/s?k=" + q + "&tag=" + AMAZON_TAG;
         return `
           <div class="buy-buttons">
-            <a href="${amazonUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-amazon">🛒 Amazon</a>
+            <a href="${amazonUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-amazon" style="flex:none;width:100%">🛒 Buy on Amazon</a>
             <a href="${ebayUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-ebay">🏷️ eBay</a>
           </div>`;
       }
