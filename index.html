@@ -1735,7 +1735,7 @@
         document.getElementById("langFlag").textContent = flags[currentLang];
         document.getElementById("langName").textContent = names[currentLang];
         document.querySelector(".hero-tagline").textContent = t("tagline");
-        document.querySelector(".hero p").textContent = t("description");
+        document.querySelectorAll(".hero p")[1].textContent = t("description");
         searchInput.placeholder = t("searchPlaceholder");
         document.getElementById("backButton").textContent = t("backBtn");
         document.getElementById("donateBtnEl").textContent = t("support");
