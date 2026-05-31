@@ -999,6 +999,62 @@
         font-weight: 600;
       }
 
+      /* ── LANGUAGE SWITCHER ── */
+      .lang-switcher {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+      .lang-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 14px;
+        background: rgba(30, 45, 60, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 12px;
+        color: #e6f7ff;
+        font-family: "Rajdhani", "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+      .lang-btn:hover {
+        border-color: rgba(0, 212, 255, 0.4);
+        color: #00d4ff;
+      }
+      .lang-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: rgba(25, 38, 52, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        min-width: 130px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      }
+      .lang-menu button {
+        display: block;
+        width: 100%;
+        padding: 10px 16px;
+        background: none;
+        border: none;
+        color: #cbd5e1;
+        font-family: "Inter", sans-serif;
+        font-size: 0.88rem;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.15s;
+      }
+      .lang-menu button:hover {
+        background: rgba(0, 212, 255, 0.1);
+        color: #00d4ff;
+      }
+
       @media (max-width: 1080px) {
         .cards-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1051,8 +1107,22 @@
       href="https://ko-fi.com/kosmadathemuxx"
       target="_blank"
       class="donate-button"
+      id="donateBtnEl"
       >💰 Support Mux</a
     >
+
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn" onclick="toggleLangMenu()">
+        <span id="langFlag">🇬🇧</span>
+        <span id="langName">EN</span>
+        <span>▾</span>
+      </button>
+      <div class="lang-menu hidden" id="langMenu">
+        <button onclick="setLang('en')">🇬🇧 English</button>
+        <button onclick="setLang('zh')">🇨🇳 中文</button>
+        <button onclick="setLang('ru')">🇷🇺 Русский</button>
+      </div>
+    </div>
 
     <div class="page-wrap">
       <header class="hero">
@@ -1145,7 +1215,7 @@
               id="filterToggleBtn"
               onclick="toggleFilterPanel()"
             >
-              ⚙️ Filters
+              <span id="filterToggleText">⚙️ Filters</span>
               <span class="filter-count-badge hidden" id="filterCountBadge"
                 >0</span
               >
@@ -1397,6 +1467,332 @@
     <div class="duel-screen hidden" id="duelScreen"></div>
 
     <script>
+      // ── TRANSLATIONS ──
+      const TRANSLATIONS = {
+        en: {
+          tagline: "Laptop Comparison Helper",
+          description: "Find your perfect machine. Start your duel.",
+          searchPlaceholder: "Search any laptop model...",
+          backBtn: "← Back",
+          "Gaming Beast": "Gaming Beast",
+          "Workstation Pro": "Workstation Pro",
+          "Thin & Light": "Thin & Light",
+          Unbreakable: "Unbreakable",
+          "Desktop Replacement": "Desktop Replacement",
+          "Best Bang for Buck": "Best Bang for Buck",
+          "Creator Studio": "Creator Studio",
+          "Battery Champion": "Battery Champion",
+          "desc.Gaming Beast": "Dominate every game",
+          "desc.Workstation Pro": "Power through any task",
+          "desc.Thin & Light": "Power meets portability",
+          "desc.Unbreakable": "Built for the battlefield",
+          "desc.Desktop Replacement": "Your desk, untethered",
+          "desc.Best Bang for Buck": "Smart spend, max power",
+          "desc.Creator Studio": "Built for makers",
+          "desc.Battery Champion": "All day, every day",
+          filterPrice: "💰 Price",
+          filterGpuType: "🎮 GPU Type",
+          filterGpuScore: "🎯 GPU Score",
+          filterRam: "💾 RAM",
+          filterBattery: "🔋 Battery",
+          filterBrand: "🏷️ Brand",
+          filterAny: "Any",
+          gpuDedicated: "Dedicated (dGPU)",
+          gpuIntegrated: "Integrated (iGPU)",
+          sortDefault: "Default order",
+          sortPriceAsc: "Price: Low → High",
+          sortPriceDesc: "Price: High → Low",
+          sortGpuDesc: "GPU Score: Best first",
+          sortBatteryDesc: "Battery: Longest first",
+          sortRamDesc: "RAM: Most first",
+          sortWeightAsc: "Weight: Lightest first",
+          sortNameAsc: "Name: A → Z",
+          filtersBtn: "⚙️ Filters",
+          clearFilters: "✕ Clear filters",
+          resultsCount: (n, t) => `${n} of ${t} laptops`,
+          resultsSearch: (n, t) => `${n} of ${t} results`,
+          duelSelectTwo: "⚔️ Select 2 laptops to duel",
+          duelEmpty: "Empty",
+          duelPickMore: "Pick one more...",
+          duelStart: "⚔️ START DUEL",
+          duelClear: "✕ Clear",
+          addToDuel: "⚔️ Add to Duel",
+          inDuel: "✓ In Duel",
+          buyAmazon: "🛒 Buy on Amazon",
+          specRam: "💾 RAM",
+          specCpu: "⚡ CPU Speed",
+          specGpu: "🎮 GPU Score",
+          specVram: "🎯 VRAM",
+          specBattery: "🔋 Battery",
+          specScreen: "🖥️ Screen",
+          specStorage: "💿 Storage",
+          specWeight: "⚖️ Weight",
+          specPrice: "💰 Price (USD)",
+          verdictLabel: "OVERALL WINNER",
+          verdictTie: "TIE GAME",
+          verdictTieText:
+            "It's a dead tie! These machines are almost perfectly matched across the board.",
+          verdictWinText: (b, m, adv) => `${b} ${m} takes the win on ${adv}.`,
+          advMoreRam: "more RAM",
+          advFasterCpu: "faster CPU",
+          advLighter: "lighter build",
+          advMoreStorage: "more storage",
+          advBetterValue: "better value",
+          advLongerBattery: "longer battery",
+          advStrongerGpu: "stronger GPU",
+          newDuel: "🔄 New Duel",
+          backToBrowse: "← Back to Browse",
+          buyWinner: "Buy the winner",
+          noResults: "No laptops found. Try a different search or category.",
+          searchResults: "Search results",
+          footer: "SpecDuel — Built by Mux / Kosmada",
+          support: "💰 Support Mux",
+        },
+        zh: {
+          tagline: "笔记本电脑对比助手",
+          description: "找到你的完美机器。开始对决。",
+          searchPlaceholder: "搜索任意笔记本型号...",
+          backBtn: "← 返回",
+          "Gaming Beast": "游戏怪兽",
+          "Workstation Pro": "专业工作站",
+          "Thin & Light": "轻薄便携",
+          Unbreakable: "坚不可摧",
+          "Desktop Replacement": "桌面替代",
+          "Best Bang for Buck": "性价比之选",
+          "Creator Studio": "创作者工作室",
+          "Battery Champion": "续航冠军",
+          "desc.Gaming Beast": "征服每一款游戏",
+          "desc.Workstation Pro": "高效完成任何任务",
+          "desc.Thin & Light": "性能与便携的完美结合",
+          "desc.Unbreakable": "为极端环境而生",
+          "desc.Desktop Replacement": "摆脱束缚的桌面",
+          "desc.Best Bang for Buck": "聪明消费，最强性能",
+          "desc.Creator Studio": "为创作者打造",
+          "desc.Battery Champion": "全天候续航",
+          filterPrice: "💰 价格",
+          filterGpuType: "🎮 GPU 类型",
+          filterGpuScore: "🎯 GPU 分数",
+          filterRam: "💾 内存",
+          filterBattery: "🔋 续航",
+          filterBrand: "🏷️ 品牌",
+          filterAny: "全部",
+          gpuDedicated: "独立显卡 (dGPU)",
+          gpuIntegrated: "集成显卡 (iGPU)",
+          sortDefault: "默认排序",
+          sortPriceAsc: "价格：从低到高",
+          sortPriceDesc: "价格：从高到低",
+          sortGpuDesc: "GPU：最佳优先",
+          sortBatteryDesc: "续航：最长优先",
+          sortRamDesc: "内存：最大优先",
+          sortWeightAsc: "重量：最轻优先",
+          sortNameAsc: "名称：A → Z",
+          filtersBtn: "⚙️ 筛选",
+          clearFilters: "✕ 清除筛选",
+          resultsCount: (n, t) => `${n} / ${t} 台`,
+          resultsSearch: (n, t) => `${n} / ${t} 个结果`,
+          duelSelectTwo: "⚔️ 选择2台笔记本进行对决",
+          duelEmpty: "空",
+          duelPickMore: "再选一台...",
+          duelStart: "⚔️ 开始对决",
+          duelClear: "✕ 清除",
+          addToDuel: "⚔️ 加入对决",
+          inDuel: "✓ 已选",
+          buyAmazon: "🛒 亚马逊购买",
+          specRam: "💾 内存",
+          specCpu: "⚡ CPU速度",
+          specGpu: "🎮 GPU分数",
+          specVram: "🎯 显存",
+          specBattery: "🔋 续航",
+          specScreen: "🖥️ 屏幕",
+          specStorage: "💿 存储",
+          specWeight: "⚖️ 重量",
+          specPrice: "💰 价格（美元）",
+          verdictLabel: "总体赢家",
+          verdictTie: "平局",
+          verdictTieText: "完全平局！这两台机器各方面几乎完全匹配。",
+          verdictWinText: (b, m, adv) => `${b} ${m} 以 ${adv} 胜出。`,
+          advMoreRam: "更大内存",
+          advFasterCpu: "更快CPU",
+          advLighter: "更轻便",
+          advMoreStorage: "更大存储",
+          advBetterValue: "更高性价比",
+          advLongerBattery: "更长续航",
+          advStrongerGpu: "更强GPU",
+          newDuel: "🔄 新对决",
+          backToBrowse: "← 返回浏览",
+          buyWinner: "购买赢家",
+          noResults: "未找到笔记本。请尝试其他搜索或分类。",
+          searchResults: "搜索结果",
+          footer: "SpecDuel — 由 Mux / Kosmada 构建",
+          support: "💰 支持 Mux",
+        },
+        ru: {
+          tagline: "Помощник по сравнению ноутбуков",
+          description: "Найди идеальную машину. Начни дуэль.",
+          searchPlaceholder: "Поиск любой модели ноутбука...",
+          backBtn: "← Назад",
+          "Gaming Beast": "Игровой зверь",
+          "Workstation Pro": "Профессиональная станция",
+          "Thin & Light": "Тонкий и лёгкий",
+          Unbreakable: "Неубиваемый",
+          "Desktop Replacement": "Замена ПК",
+          "Best Bang for Buck": "Лучший за деньги",
+          "Creator Studio": "Студия создателя",
+          "Battery Champion": "Чемпион автономности",
+          "desc.Gaming Beast": "Доминируй в каждой игре",
+          "desc.Workstation Pro": "Справляйся с любыми задачами",
+          "desc.Thin & Light": "Мощность и портативность",
+          "desc.Unbreakable": "Создан для поля боя",
+          "desc.Desktop Replacement": "Твой стол без привязки",
+          "desc.Best Bang for Buck": "Умные траты, максимум мощи",
+          "desc.Creator Studio": "Создан для мейкеров",
+          "desc.Battery Champion": "Весь день, каждый день",
+          filterPrice: "💰 Цена",
+          filterGpuType: "🎮 Тип GPU",
+          filterGpuScore: "🎯 Рейтинг GPU",
+          filterRam: "💾 ОЗУ",
+          filterBattery: "🔋 Батарея",
+          filterBrand: "🏷️ Бренд",
+          filterAny: "Любой",
+          gpuDedicated: "Дискретная (dGPU)",
+          gpuIntegrated: "Встроенная (iGPU)",
+          sortDefault: "По умолчанию",
+          sortPriceAsc: "Цена: по возрастанию",
+          sortPriceDesc: "Цена: по убыванию",
+          sortGpuDesc: "GPU: сначала лучшие",
+          sortBatteryDesc: "Батарея: дольше всего",
+          sortRamDesc: "ОЗУ: больше всего",
+          sortWeightAsc: "Вес: сначала лёгкие",
+          sortNameAsc: "Название: A → Z",
+          filtersBtn: "⚙️ Фильтры",
+          clearFilters: "✕ Сбросить",
+          resultsCount: (n, t) => `${n} из ${t} ноутбуков`,
+          resultsSearch: (n, t) => `${n} из ${t} результатов`,
+          duelSelectTwo: "⚔️ Выбери 2 ноутбука для дуэли",
+          duelEmpty: "Пусто",
+          duelPickMore: "Выбери ещё один...",
+          duelStart: "⚔️ НАЧАТЬ ДУЭЛЬ",
+          duelClear: "✕ Очистить",
+          addToDuel: "⚔️ В дуэль",
+          inDuel: "✓ В дуэли",
+          buyAmazon: "🛒 Купить на Amazon",
+          specRam: "💾 ОЗУ",
+          specCpu: "⚡ Скорость CPU",
+          specGpu: "🎮 Рейтинг GPU",
+          specVram: "🎯 VRAM",
+          specBattery: "🔋 Батарея",
+          specScreen: "🖥️ Экран",
+          specStorage: "💿 Накопитель",
+          specWeight: "⚖️ Вес",
+          specPrice: "💰 Цена (USD)",
+          verdictLabel: "ПОБЕДИТЕЛЬ",
+          verdictTie: "НИЧЬЯ",
+          verdictTieText:
+            "Полная ничья! Эти машины практически идентичны по всем параметрам.",
+          verdictWinText: (b, m, adv) => `${b} ${m} побеждает по: ${adv}.`,
+          advMoreRam: "больше ОЗУ",
+          advFasterCpu: "быстрее CPU",
+          advLighter: "легче",
+          advMoreStorage: "больше памяти",
+          advBetterValue: "лучше за деньги",
+          advLongerBattery: "дольше держит заряд",
+          advStrongerGpu: "мощнее GPU",
+          newDuel: "🔄 Новая дуэль",
+          backToBrowse: "← Назад к каталогу",
+          buyWinner: "Купить победителя",
+          noResults:
+            "Ноутбуки не найдены. Попробуй другой запрос или категорию.",
+          searchResults: "Результаты поиска",
+          footer: "SpecDuel — Создано Mux / Kosmada",
+          support: "💰 Поддержать Mux",
+        },
+      };
+
+      let currentLang = localStorage.getItem("lang") || "en";
+      const t = (key) =>
+        TRANSLATIONS[currentLang][key] ?? TRANSLATIONS.en[key] ?? key;
+
+      function toggleLangMenu() {
+        document.getElementById("langMenu").classList.toggle("hidden");
+      }
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("langSwitcher").contains(e.target))
+          document.getElementById("langMenu").classList.add("hidden");
+      });
+
+      function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem("lang", lang);
+        document.getElementById("langMenu").classList.add("hidden");
+        applyLang();
+        if (activeCategory) openCategory(activeCategory);
+        else if (searchInput.value.trim()) updateSearch();
+      }
+
+      function applyLang() {
+        const flags = { en: "🇬🇧", zh: "🇨🇳", ru: "🇷🇺" };
+        const names = { en: "EN", zh: "中文", ru: "RU" };
+        document.getElementById("langFlag").textContent = flags[currentLang];
+        document.getElementById("langName").textContent = names[currentLang];
+        document.querySelector(".hero-tagline").textContent = t("tagline");
+        document.querySelector(".hero p").textContent = t("description");
+        searchInput.placeholder = t("searchPlaceholder");
+        document.getElementById("backButton").textContent = t("backBtn");
+        document.getElementById("donateBtnEl").textContent = t("support");
+        document.querySelectorAll("#cardGrid .card").forEach((card) => {
+          const key = card.dataset.title;
+          card.querySelector(".card-title").textContent = t(key);
+          card.querySelector(".card-copy").textContent = t("desc." + key);
+        });
+        const filterLabels = document.querySelectorAll(".filter-label");
+        const labelKeys = [
+          "filterPrice",
+          "filterGpuType",
+          "filterGpuScore",
+          "filterRam",
+          "filterBattery",
+          "filterBrand",
+        ];
+        filterLabels.forEach((el, i) => {
+          if (labelKeys[i]) el.textContent = t(labelKeys[i]);
+        });
+        document.querySelectorAll(".price-chip")[0].textContent =
+          t("filterAny");
+        document.querySelectorAll(".gputype-chip")[0].textContent =
+          t("filterAny");
+        document.querySelectorAll(".gputype-chip")[1].textContent =
+          t("gpuDedicated");
+        document.querySelectorAll(".gputype-chip")[2].textContent =
+          t("gpuIntegrated");
+        document.querySelectorAll(".score-chip")[0].textContent =
+          t("filterAny");
+        document.querySelectorAll(".ram-chip")[0].textContent = t("filterAny");
+        document.querySelectorAll(".bat-chip")[0].textContent = t("filterAny");
+        const sortSelect = document.getElementById("sortSelect");
+        const sortKeys = [
+          "sortDefault",
+          "sortPriceAsc",
+          "sortPriceDesc",
+          "sortGpuDesc",
+          "sortBatteryDesc",
+          "sortRamDesc",
+          "sortWeightAsc",
+          "sortNameAsc",
+        ];
+        [...sortSelect.options].forEach((opt, i) => {
+          if (sortKeys[i]) opt.textContent = t(sortKeys[i]);
+        });
+        document.getElementById("filterToggleText").textContent =
+          t("filtersBtn");
+        document.getElementById("clearFiltersBtn").textContent =
+          t("clearFilters");
+        document.getElementById("duelBarText").textContent = t("duelSelectTwo");
+        document.getElementById("startDuelBtn").textContent = t("duelStart");
+        document.querySelector(".clear-duel-btn").textContent = t("duelClear");
+        document.querySelector(".footer span:last-child").textContent =
+          t("footer");
+      }
+
       const searchInput = document.getElementById("searchInput");
       const cardGrid = document.getElementById("cardGrid");
       const laptopView = document.getElementById("laptopView");
@@ -1671,11 +2067,11 @@
 
         slot1.textContent = duelSelection[0]
           ? duelSelection[0].brand + " " + duelSelection[0].model
-          : "Empty";
+          : t("duelEmpty");
         slot1.className = "duel-slot" + (duelSelection[0] ? " filled" : "");
         slot2.textContent = duelSelection[1]
           ? duelSelection[1].brand + " " + duelSelection[1].model
-          : "Pick one more...";
+          : t("duelPickMore");
         slot2.className = "duel-slot" + (duelSelection[1] ? " filled" : "");
 
         if (duelSelection.length === 2) {
@@ -1692,7 +2088,7 @@
           const isSelected = duelSelection.find(
             (l) => l.brand === brand && l.model === model,
           );
-          btn.textContent = isSelected ? "✓ In Duel" : "⚔️ Add to Duel";
+          btn.textContent = isSelected ? t("inDuel") : t("addToDuel");
           btn.className = "add-duel-btn" + (isSelected ? " in-duel" : "");
         });
       }
@@ -1740,26 +2136,18 @@
 
         let verdict = "";
         if (!winner) {
-          verdict =
-            "It's a dead tie! These machines are almost perfectly matched across the board.";
+          verdict = t("verdictTieText");
         } else {
           const adv = [];
           const w = winner;
-          if ((w === a && ramA > ramB) || (w === b && ramB > ramA))
-            adv.push("more RAM");
-          if ((w === a && ghzA > ghzB) || (w === b && ghzB > ghzA))
-            adv.push("faster CPU");
-          if ((w === a && wgtA < wgtB) || (w === b && wgtB < wgtA))
-            adv.push("lighter build");
-          if ((w === a && stoA > stoB) || (w === b && stoB > stoA))
-            adv.push("more storage");
-          if ((w === a && priA < priB) || (w === b && priB < priA))
-            adv.push("better value");
-          if ((w === a && batA > batB) || (w === b && batB > batA))
-            adv.push("longer battery");
-          if ((w === a && gpuA > gpuB) || (w === b && gpuB > gpuA))
-            adv.push("stronger GPU");
-          verdict = `${w.brand} ${w.model} takes the win on ${adv.join(", ")}.`;
+          if ((w === a && ramA > ramB) || (w === b && ramB > ramA)) adv.push(t("advMoreRam"));
+          if ((w === a && ghzA > ghzB) || (w === b && ghzB > ghzA)) adv.push(t("advFasterCpu"));
+          if ((w === a && wgtA < wgtB) || (w === b && wgtB < wgtA)) adv.push(t("advLighter"));
+          if ((w === a && stoA > stoB) || (w === b && stoB > stoA)) adv.push(t("advMoreStorage"));
+          if ((w === a && priA < priB) || (w === b && priB < priA)) adv.push(t("advBetterValue"));
+          if ((w === a && batA > batB) || (w === b && batB > batA)) adv.push(t("advLongerBattery"));
+          if ((w === a && gpuA > gpuB) || (w === b && gpuB > gpuA)) adv.push(t("advStrongerGpu"));
+          verdict = t("verdictWinText")(w.brand, w.model, adv.join(", "));
         }
 
         function specRow(label, valA, valB, aWins, tie) {
@@ -1797,33 +2185,33 @@
               </div>
             </div>
             <div class="spec-table">
-              ${specRow("💾 RAM", a.ram, b.ram, ramA > ramB, ramA === ramB)}
-              ${specRow("⚡ CPU Speed", a.cpu_ghz, b.cpu_ghz, ghzA > ghzB, ghzA === ghzB)}
-              ${specRow("🎮 GPU Score", gpuA.toLocaleString(), gpuB.toLocaleString(), gpuA > gpuB, gpuA === gpuB)}
-              ${specRow("🎯 VRAM", a.vram || "Shared", b.vram || "Shared", false, true)}
-              ${specRow("🔋 Battery", (batA || "?") + "h", (batB || "?") + "h", batA > batB, batA === batB)}
-              ${specRow("🖥️ Screen", a.screen, b.screen, false, true)}
-              ${specRow("💿 Storage", a.storage, b.storage, stoA > stoB, stoA === stoB)}
-              ${specRow("⚖️ Weight", a.weight, b.weight, wgtA < wgtB, wgtA === wgtB)}
-              ${specRow("💰 Price (USD)", fmt(priA), fmt(priB), priA < priB, priA === priB)}
+              ${specRow(t("specRam"), a.ram, b.ram, ramA > ramB, ramA === ramB)}
+              ${specRow(t("specCpu"), a.cpu_ghz, b.cpu_ghz, ghzA > ghzB, ghzA === ghzB)}
+              ${specRow(t("specGpu"), gpuA.toLocaleString(), gpuB.toLocaleString(), gpuA > gpuB, gpuA === gpuB)}
+              ${specRow(t("specVram"), a.vram || "Shared", b.vram || "Shared", false, true)}
+              ${specRow(t("specBattery"), (batA || "?") + "h", (batB || "?") + "h", batA > batB, batA === batB)}
+              ${specRow(t("specScreen"), a.screen, b.screen, false, true)}
+              ${specRow(t("specStorage"), a.storage, b.storage, stoA > stoB, stoA === stoB)}
+              ${specRow(t("specWeight"), a.weight, b.weight, wgtA < wgtB, wgtA === wgtB)}
+              ${specRow(t("specPrice"), fmt(priA), fmt(priB), priA < priB, priA === priB)}
             </div>
             <div class="duel-verdict">
               <div class="verdict-trophy">${winner ? "🏆" : "🤝"}</div>
-              <div class="verdict-label">OVERALL WINNER</div>
-              <div class="verdict-winner">${winner ? winner.brand + " " + winner.model : "TIE GAME"}</div>
+              <div class="verdict-label">${t("verdictLabel")}</div>
+              <div class="verdict-winner">${winner ? winner.brand + " " + winner.model : t("verdictTie")}</div>
               <div class="verdict-text">${verdict}</div>
               <div class="verdict-score">${winsA} — ${winsB}</div>
             </div>
             <div class="duel-winner-buy" id="duelWinnerBuy"></div>
             <div class="duel-actions">
-              <button class="duel-btn" onclick="resetDuel()">🔄 New Duel</button>
-              <button class="duel-btn secondary" onclick="closeDuel()">← Back to Browse</button>
+              <button class="duel-btn" onclick="resetDuel()">${t("newDuel")}</button>
+              <button class="duel-btn secondary" onclick="closeDuel()">${t("backToBrowse")}</button>
             </div>
           </div>`;
         screen.classList.remove("hidden");
         const buyTarget = winner || a;
         document.getElementById("duelWinnerBuy").innerHTML = `
-          <p style="text-align:center;color:#6b7280;font-size:0.82rem;letter-spacing:0.08em;font-family:Rajdhani,sans-serif;text-transform:uppercase;margin:0 0 10px">Buy the winner</p>
+          <p style="text-align:center;color:#6b7280;font-size:0.82rem;letter-spacing:0.08em;font-family:Rajdhani,sans-serif;text-transform:uppercase;margin:0 0 10px">${t("buyWinner")}</p>
           ${makeBuyLinks(buyTarget.brand, buyTarget.model)}`;
       }
 
@@ -1853,7 +2241,7 @@
       function renderLaptopCards(items) {
         window._currentLaptopItems = items || [];
         if (!items || items.length === 0) {
-          laptopGrid.innerHTML = `<div class="no-results">No laptops found. Try a different search or category.</div>`;
+          laptopGrid.innerHTML = `<div class="no-results">${t("noResults")}</div>`;
           return;
         }
         laptopGrid.innerHTML = items
@@ -1883,7 +2271,7 @@
               <button class="add-duel-btn ${isSelected ? "in-duel" : ""}"
                 data-brand="${safeBrand}" data-model="${safeModel}"
                 onclick="event.stopPropagation();handleDuelBtn(${i})">
-                ${isSelected ? "✓ In Duel" : "⚔️ Add to Duel"}
+                ${isSelected ? t("inDuel") : t("addToDuel")}
               </button>
             </article>`;
           })
@@ -1894,9 +2282,11 @@
         activeCategory = category;
         const base = laptops.filter((l) => l.category === category);
         const filtered = applyFiltersAndSort(base);
-        laptopHeading.textContent = category;
-        document.getElementById("resultsCount").textContent =
-          filtered.length + " of " + base.length + " laptops";
+        laptopHeading.textContent = t(category);
+        document.getElementById("resultsCount").textContent = t("resultsCount")(
+          filtered.length,
+          base.length,
+        );
         laptopDescription.textContent = "";
         renderLaptopCards(filtered);
         setVisibleSection(true);
@@ -1924,9 +2314,9 @@
             model.toLowerCase().includes(query),
         );
         const matched = applyFiltersAndSort(base);
-        laptopHeading.textContent = "Search results";
+        laptopHeading.textContent = t("searchResults");
         document.getElementById("resultsCount").textContent =
-          matched.length + " of " + base.length + " results";
+          t("resultsSearch")(matched.length, base.length);
         laptopDescription.textContent = "";
         renderLaptopCards(matched);
         setVisibleSection(true);
@@ -1965,6 +2355,8 @@
       document.querySelectorAll("#cardGrid .card").forEach((card) => {
         card.addEventListener("click", () => openCategory(card.dataset.title));
       });
+
+      applyLang();
     </script>
   </body>
 </html>
