@@ -1,0 +1,1861 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpecDuel — Laptop Comparison</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap");
+
+      :root {
+        color-scheme: dark;
+        font-family: "Inter", sans-serif;
+        background-color: #0d1117;
+        color: #e6f7ff;
+        scroll-behavior: smooth;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #0d1117;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 40px 24px 100px;
+        position: relative;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            circle at 20% 10%,
+            rgba(0, 212, 255, 0.16),
+            transparent 18%
+          ),
+          radial-gradient(
+            circle at 80% 15%,
+            rgba(168, 85, 247, 0.14),
+            transparent 20%
+          ),
+          linear-gradient(0deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size:
+          20px 20px,
+          24px 24px,
+          100px 100px,
+          100px 100px;
+        opacity: 0.55;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        width: min(1320px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+      }
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        padding: 20px 12px 0;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(3rem, 4vw, 5rem);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #00d4ff;
+        text-shadow:
+          0 0 18px rgba(0, 212, 255, 0.45),
+          0 0 40px rgba(0, 212, 255, 0.18);
+      }
+      .logo span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.2em;
+        height: 1.2em;
+        font-size: 1.2em;
+        color: #fff;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+      }
+      .hero p {
+        max-width: 720px;
+        margin: 0;
+        font-size: 1.1rem;
+        color: #cbd5e1;
+        letter-spacing: 0.01em;
+      }
+      .hero-tagline {
+        max-width: 720px;
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #00d4ff;
+        letter-spacing: 0.24em;
+      }
+      .donate-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 18px;
+        background: #22c55e;
+        color: #fff;
+        border-radius: 12px;
+        text-decoration: none;
+        font-family: "Rajdhani", "Inter", sans-serif;
+        font-weight: 700;
+        box-shadow: 0 0 12px #22c55e;
+        transition:
+          transform 0.2s,
+          background-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .donate-button:hover {
+        background: #16a34a;
+        transform: translateY(-2px);
+        box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
+      }
+      .search-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 0 12px;
+      }
+      .search-field {
+        width: min(760px, 100%);
+        padding: 18px 22px;
+        border-radius: 999px;
+        border: 2px solid rgba(255, 255, 255, 0.06);
+        background: rgba(15, 18, 33, 0.95);
+        color: #e2f3ff;
+        font-size: 1rem;
+        outline: none;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s,
+          transform 0.2s;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .search-field::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .search-field:focus {
+        border-color: rgba(0, 212, 255, 0.65);
+        box-shadow:
+          0 0 28px rgba(0, 212, 255, 0.22),
+          inset 0 0 0 1px rgba(0, 212, 255, 0.18);
+        transform: translateY(-1px);
+      }
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 22px;
+        padding: 0 12px 14px;
+      }
+      .card {
+        position: relative;
+        background: #141b2e;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 18px;
+        padding: 28px 22px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        min-height: 230px;
+        overflow: hidden;
+        transition:
+          transform 0.32s,
+          box-shadow 0.32s,
+          border-color 0.32s;
+        cursor: pointer;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08),
+          transparent 40%
+        );
+        pointer-events: none;
+        opacity: 0.2;
+      }
+      .card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      }
+      .card-icon {
+        font-size: 3.2rem;
+        line-height: 1;
+        z-index: 1;
+        text-shadow: 0 0 32px rgba(255, 255, 255, 0.12);
+      }
+      .card-title {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.15rem;
+        letter-spacing: 0.04em;
+        margin: 0;
+        z-index: 1;
+      }
+      .card-copy {
+        margin: 0;
+        font-size: 0.96rem;
+        color: #cbd5e1;
+        text-align: center;
+        line-height: 1.5;
+        z-index: 1;
+      }
+      .card-skill {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 8px;
+        width: 100%;
+        top: 0;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        z-index: 0;
+        opacity: 0.95;
+      }
+      .card.red .card-skill {
+        background: #ff4444;
+        box-shadow: 0 0 30px rgba(255, 68, 68, 0.45);
+      }
+      .card.purple .card-skill {
+        background: #a855f7;
+        box-shadow: 0 0 30px rgba(168, 85, 247, 0.45);
+      }
+      .card.blue .card-skill {
+        background: #00d4ff;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.45);
+      }
+      .card.green .card-skill {
+        background: #22c55e;
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.45);
+      }
+      .card.orange .card-skill {
+        background: #f97316;
+        box-shadow: 0 0 30px rgba(249, 115, 22, 0.45);
+      }
+      .card.yellow .card-skill {
+        background: #eab308;
+        box-shadow: 0 0 30px rgba(234, 179, 8, 0.45);
+      }
+      .card.pink .card-skill {
+        background: #ec4899;
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.45);
+      }
+      .card.cyan .card-skill {
+        background: #06b6d4;
+        box-shadow: 0 0 30px rgba(6, 182, 212, 0.45);
+      }
+      .hidden {
+        display: none !important;
+      }
+      .back-button {
+        margin: 0 12px 18px;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 999px;
+        background: rgba(0, 212, 255, 0.12);
+        color: #e6f7ff;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.22);
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s,
+          background 0.25s;
+      }
+      .back-button:hover {
+        transform: translateY(-2px);
+        background: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 0 28px rgba(0, 212, 255, 0.35);
+      }
+      .laptop-view {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 0 12px 14px;
+      }
+      .laptop-header {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .laptop-header h2 {
+        margin: 0;
+        font-family: "Rajdhani", sans-serif;
+        font-size: clamp(1.6rem, 2vw, 2.4rem);
+        letter-spacing: 0.06em;
+      }
+      .laptop-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 22px;
+      }
+      .laptop-card {
+        position: relative;
+        background: #141b2e;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 16px;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 260px;
+        transition:
+          transform 0.28s,
+          box-shadow 0.28s;
+      }
+      .laptop-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      }
+      .laptop-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08),
+          transparent 38%
+        );
+        pointer-events: none;
+        opacity: 0.15;
+      }
+      .laptop-card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 6px;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+      }
+      .laptop-card.red::after {
+        background: #ff4444;
+        box-shadow: 0 0 24px rgba(255, 68, 68, 0.35);
+      }
+      .laptop-card.purple::after {
+        background: #a855f7;
+        box-shadow: 0 0 24px rgba(168, 85, 247, 0.35);
+      }
+      .laptop-card.blue::after {
+        background: #00d4ff;
+        box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
+      }
+      .laptop-card.green::after {
+        background: #22c55e;
+        box-shadow: 0 0 24px rgba(34, 197, 94, 0.35);
+      }
+      .laptop-card.orange::after {
+        background: #f97316;
+        box-shadow: 0 0 24px rgba(249, 115, 22, 0.35);
+      }
+      .laptop-card.yellow::after {
+        background: #eab308;
+        box-shadow: 0 0 24px rgba(234, 179, 8, 0.35);
+      }
+      .laptop-card.pink::after {
+        background: #ec4899;
+        box-shadow: 0 0 24px rgba(236, 72, 153, 0.35);
+      }
+      .laptop-card.cyan::after {
+        background: #06b6d4;
+        box-shadow: 0 0 24px rgba(6, 182, 212, 0.35);
+      }
+      .laptop-brand {
+        color: #00d4ff;
+        font-weight: 700;
+      }
+      .laptop-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+      .laptop-specs {
+        display: grid;
+        gap: 8px;
+        color: #a1a1aa;
+        font-size: 0.92rem;
+        line-height: 1.5;
+      }
+      .laptop-specs span {
+        display: inline-flex;
+        gap: 6px;
+      }
+      .laptop-price {
+        margin-top: auto;
+        color: #22c55e;
+        font-size: 1.35rem;
+        font-weight: 700;
+      }
+      .no-results {
+        grid-column: 1/-1;
+        padding: 32px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        text-align: center;
+        color: #cbd5e1;
+      }
+      .footer {
+        display: flex;
+        justify-content: center;
+        padding: 22px 12px 12px;
+        color: #9ca3af;
+        font-size: 0.94rem;
+        gap: 8px;
+        text-align: center;
+      }
+      .footer span {
+        color: #00d4ff;
+      }
+      .glow-icon {
+        color: #00d4ff;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.28);
+      }
+      .gpu-badge {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+        vertical-align: middle;
+        margin-left: 4px;
+        font-family: "Rajdhani", sans-serif;
+        letter-spacing: 0.04em;
+      }
+      .badge-dgpu {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.4);
+      }
+      .badge-igpu {
+        background: rgba(0, 212, 255, 0.12);
+        color: #00d4ff;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+      }
+      /* ── BUY BUTTONS ── */
+      .buy-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: auto;
+        width: 100%;
+      }
+      .buy-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 9px 6px;
+        border-radius: 10px;
+        border: none;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s;
+        position: relative;
+        z-index: 2;
+      }
+      .buy-btn-amazon {
+        background: linear-gradient(135deg, #ff9900, #e88200);
+        color: #000;
+        box-shadow: 0 0 14px rgba(255, 153, 0, 0.3);
+      }
+      .buy-btn-amazon:hover {
+        background: linear-gradient(135deg, #ffad33, #ff9900);
+        box-shadow: 0 0 22px rgba(255, 153, 0, 0.5);
+        transform: translateY(-2px);
+      }
+      .buy-btn-ebay {
+        background: linear-gradient(135deg, #86b817, #6a9312);
+        color: #fff;
+        box-shadow: 0 0 14px rgba(134, 184, 23, 0.3);
+      }
+      .buy-btn-ebay:hover {
+        background: linear-gradient(135deg, #97cc1a, #86b817);
+        box-shadow: 0 0 22px rgba(134, 184, 23, 0.5);
+        transform: translateY(-2px);
+      }
+
+      /* ── ADD TO DUEL BUTTON ── */
+      .add-duel-btn {
+        margin-top: auto;
+        padding: 10px 14px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 10px;
+        background: rgba(0, 212, 255, 0.08);
+        color: #00d4ff;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 2;
+        position: relative;
+      }
+      .add-duel-btn:hover {
+        background: rgba(0, 212, 255, 0.18);
+        border-color: rgba(0, 212, 255, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 0 14px rgba(0, 212, 255, 0.25);
+      }
+      .add-duel-btn.in-duel {
+        background: rgba(234, 179, 8, 0.15);
+        border-color: rgba(234, 179, 8, 0.6);
+        color: #eab308;
+        box-shadow: 0 0 14px rgba(234, 179, 8, 0.25);
+      }
+
+      /* ── DUEL BAR ── */
+      .duel-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9998;
+        background: rgba(10, 14, 28, 0.97);
+        border-top: 1px solid rgba(234, 179, 8, 0.3);
+        box-shadow: 0 -4px 40px rgba(234, 179, 8, 0.15);
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        backdrop-filter: blur(12px);
+        animation: slideUp 0.3s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      .duel-bar-text {
+        color: #eab308;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+      }
+      .duel-bar-slots {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .duel-slot {
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px dashed rgba(234, 179, 8, 0.4);
+        color: #6b7280;
+        font-size: 0.85rem;
+        min-width: 120px;
+        text-align: center;
+      }
+      .duel-slot.filled {
+        border-color: #eab308;
+        color: #fff;
+        background: rgba(234, 179, 8, 0.1);
+      }
+      .duel-bar-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .start-duel-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #eab308, #f59e0b);
+        color: #000;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+      }
+      .start-duel-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(234, 179, 8, 0.6);
+      }
+      .clear-duel-btn {
+        padding: 12px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        background: transparent;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+      }
+      .clear-duel-btn:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff;
+      }
+
+      .duel-winner-buy {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+      }
+      /* ── DUEL SCREEN ── */
+      .duel-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: rgba(8, 12, 24, 0.98);
+        overflow-y: auto;
+        animation: fadeIn 0.35s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .duel-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+      .duel-title {
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        letter-spacing: 0.14em;
+        color: #eab308;
+        text-shadow:
+          0 0 30px rgba(234, 179, 8, 0.5),
+          0 0 60px rgba(234, 179, 8, 0.2);
+      }
+      .duel-title span {
+        color: #00d4ff;
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+      }
+      .duel-columns {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 20px;
+        align-items: center;
+      }
+      .duel-col {
+        background: #141b2e;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        transition: all 0.3s;
+      }
+      .duel-col.col-winner {
+        border-color: rgba(34, 197, 94, 0.5);
+        box-shadow: 0 0 40px rgba(34, 197, 94, 0.2);
+        background: rgba(34, 197, 94, 0.05);
+      }
+      .duel-col.col-loser {
+        opacity: 0.6;
+      }
+      .duel-col-brand {
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .duel-col-model {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+      }
+      .duel-col-category {
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #6b7280;
+        letter-spacing: 0.06em;
+      }
+      .duel-vs {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.8rem;
+        color: #eab308;
+        text-align: center;
+        text-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
+      }
+      /* color text classes */
+      .red-text {
+        color: #ff4444;
+      }
+      .purple-text {
+        color: #a855f7;
+      }
+      .blue-text {
+        color: #00d4ff;
+      }
+      .green-text {
+        color: #22c55e;
+      }
+      .orange-text {
+        color: #f97316;
+      }
+      .yellow-text {
+        color: #eab308;
+      }
+      .pink-text {
+        color: #ec4899;
+      }
+      .cyan-text {
+        color: #06b6d4;
+      }
+
+      /* ── SPEC TABLE ── */
+      .spec-table {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .spec-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.2s;
+      }
+      .spec-row:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .spec-label {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+      }
+      .spec-val {
+        font-size: 0.92rem;
+        color: #a1a1aa;
+        border-radius: 8px;
+        padding: 6px 10px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+      .spec-val:first-child {
+        text-align: right;
+      }
+      .spec-val:last-child {
+        text-align: left;
+      }
+      .spec-win {
+        color: #22c55e !important;
+        background: rgba(34, 197, 94, 0.12);
+        font-weight: 700;
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+      }
+      .spec-lose {
+        color: #ef4444 !important;
+        background: rgba(239, 68, 68, 0.08);
+        opacity: 0.7;
+      }
+
+      /* ── VERDICT BOX ── */
+      .duel-verdict {
+        background: rgba(234, 179, 8, 0.05);
+        border: 1px solid rgba(234, 179, 8, 0.3);
+        border-radius: 20px;
+        padding: 32px;
+        text-align: center;
+        box-shadow: 0 0 60px rgba(234, 179, 8, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+      }
+      .verdict-trophy {
+        font-size: 4rem;
+        filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6));
+      }
+      .verdict-label {
+        color: #6b7280;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-family: "Rajdhani", sans-serif;
+      }
+      .verdict-winner {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        color: #eab308;
+        letter-spacing: 0.08em;
+        text-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
+      }
+      .verdict-text {
+        color: #cbd5e1;
+        font-size: 1rem;
+        max-width: 600px;
+        line-height: 1.6;
+      }
+      .verdict-score {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2rem;
+        color: #fff;
+        letter-spacing: 0.1em;
+      }
+
+      /* ── DUEL ACTIONS ── */
+      .duel-actions {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .duel-btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #eab308, #f59e0b);
+        color: #000;
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+      }
+      .duel-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 30px rgba(234, 179, 8, 0.5);
+      }
+      .duel-btn.secondary {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        color: #00d4ff;
+        box-shadow: none;
+      }
+      .duel-btn.secondary:hover {
+        background: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+      }
+
+      @media (max-width: 1080px) {
+        .cards-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .laptop-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 700px) {
+        body {
+          padding: 24px 16px 100px;
+        }
+        .hero {
+          padding-top: 0;
+        }
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
+        .laptop-grid {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          min-height: auto;
+        }
+        .duel-columns {
+          grid-template-columns: 1fr;
+        }
+        .duel-vs {
+          display: none;
+        }
+        .duel-bar {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .spec-row {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .spec-val:first-child {
+          text-align: center;
+        }
+        .spec-val:last-child {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a
+      href="https://ko-fi.com/kosmadathemuxx"
+      target="_blank"
+      class="donate-button"
+      >💰 Support Mux</a
+    >
+
+    <div class="page-wrap">
+      <header class="hero">
+        <div class="logo"><span>⚡</span> SpecDuel</div>
+        <p class="hero-tagline">Laptop Comparison Helper</p>
+        <p>Find your perfect machine. Start your duel.</p>
+      </header>
+
+      <div class="search-wrap">
+        <input
+          id="searchInput"
+          type="search"
+          class="search-field"
+          placeholder="Search any laptop model..."
+          aria-label="Search laptops"
+        />
+      </div>
+
+      <main class="cards-grid" id="cardGrid">
+        <article class="card red" data-title="Gaming Beast">
+          <div class="card-skill"></div>
+          <div class="card-icon">🎮</div>
+          <h2 class="card-title">Gaming Beast</h2>
+          <p class="card-copy">Dominate every game</p>
+        </article>
+        <article class="card purple" data-title="Workstation Pro">
+          <div class="card-skill"></div>
+          <div class="card-icon">💼</div>
+          <h2 class="card-title">Workstation Pro</h2>
+          <p class="card-copy">Power through any task</p>
+        </article>
+        <article class="card blue" data-title="Thin & Light">
+          <div class="card-skill"></div>
+          <div class="card-icon">🪶</div>
+          <h2 class="card-title">Thin & Light</h2>
+          <p class="card-copy">Power meets portability</p>
+        </article>
+        <article class="card green" data-title="Unbreakable">
+          <div class="card-skill"></div>
+          <div class="card-icon">🛡️</div>
+          <h2 class="card-title">Unbreakable</h2>
+          <p class="card-copy">Built for the battlefield</p>
+        </article>
+        <article class="card orange" data-title="Desktop Replacement">
+          <div class="card-skill"></div>
+          <div class="card-icon">🖥️</div>
+          <h2 class="card-title">Desktop Replacement</h2>
+          <p class="card-copy">Your desk, untethered</p>
+        </article>
+        <article class="card yellow" data-title="Best Bang for Buck">
+          <div class="card-skill"></div>
+          <div class="card-icon">⚡</div>
+          <h2 class="card-title">Best Bang for Buck</h2>
+          <p class="card-copy">Smart spend, max power</p>
+        </article>
+        <article class="card pink" data-title="Creator Studio">
+          <div class="card-skill"></div>
+          <div class="card-icon">🎨</div>
+          <h2 class="card-title">Creator Studio</h2>
+          <p class="card-copy">Built for makers</p>
+        </article>
+        <article class="card cyan" data-title="Battery Champion">
+          <div class="card-skill"></div>
+          <div class="card-icon">🔋</div>
+          <h2 class="card-title">Battery Champion</h2>
+          <p class="card-copy">All day, every day</p>
+        </article>
+      </main>
+
+      <section class="laptop-view hidden" id="laptopView">
+        <button id="backButton" class="back-button">← Back</button>
+        <div class="laptop-header">
+          <h2 id="laptopHeading"></h2>
+          <p id="laptopDescription" class="card-copy"></p>
+        </div>
+        <div class="filter-bar" id="filterBar">
+          <div class="filter-bar-top">
+            <select id="sortSelect" class="sort-select">
+              <option value="default">Default order</option>
+              <option value="price-asc">Price: Low → High</option>
+              <option value="price-desc">Price: High → Low</option>
+              <option value="gpu-desc">GPU Score: Best first</option>
+              <option value="battery-desc">Battery: Longest first</option>
+              <option value="ram-desc">RAM: Most first</option>
+              <option value="weight-asc">Weight: Lightest first</option>
+              <option value="name-asc">Name: A → Z</option>
+            </select>
+            <button
+              class="filter-toggle-btn"
+              id="filterToggleBtn"
+              onclick="toggleFilterPanel()"
+            >
+              ⚙️ Filters
+              <span class="filter-count-badge hidden" id="filterCountBadge"
+                >0</span
+              >
+            </button>
+            <button
+              class="clear-filters-btn hidden"
+              id="clearFiltersBtn"
+              onclick="clearAllFilters()"
+            >
+              ✕ Clear filters
+            </button>
+            <span class="results-count" id="resultsCount"></span>
+          </div>
+          <div class="filter-panel hidden" id="filterPanel">
+            <div class="filter-row">
+              <span class="filter-label">💰 Price</span>
+              <button
+                class="filter-chip price-chip active"
+                data-price-min="0"
+                data-price-max="999999"
+                onclick="setPrice(0, 999999, this)"
+              >
+                Any
+              </button>
+              <button
+                class="filter-chip price-chip"
+                data-price-min="0"
+                data-price-max="500"
+                onclick="setPrice(0, 500, this)"
+              >
+                Under $500
+              </button>
+              <button
+                class="filter-chip price-chip"
+                data-price-min="500"
+                data-price-max="1000"
+                onclick="setPrice(500, 1000, this)"
+              >
+                $500–1K
+              </button>
+              <button
+                class="filter-chip price-chip"
+                data-price-min="1000"
+                data-price-max="1500"
+                onclick="setPrice(1000, 1500, this)"
+              >
+                $1K–1.5K
+              </button>
+              <button
+                class="filter-chip price-chip"
+                data-price-min="1500"
+                data-price-max="2500"
+                onclick="setPrice(1500, 2500, this)"
+              >
+                $1.5K–2.5K
+              </button>
+              <button
+                class="filter-chip price-chip"
+                data-price-min="2500"
+                data-price-max="999999"
+                onclick="setPrice(2500, 999999, this)"
+              >
+                $2.5K+
+              </button>
+            </div>
+            <div class="filter-row">
+              <span class="filter-label">🎮 GPU Type</span>
+              <button
+                class="filter-chip gputype-chip active"
+                data-val=""
+                onclick="setGpuType('', this)"
+              >
+                Any
+              </button>
+              <button
+                class="filter-chip gputype-chip"
+                data-val="dGPU"
+                onclick="setGpuType('dGPU', this)"
+              >
+                Dedicated (dGPU)
+              </button>
+              <button
+                class="filter-chip gputype-chip"
+                data-val="iGPU"
+                onclick="setGpuType('iGPU', this)"
+              >
+                Integrated (iGPU)
+              </button>
+            </div>
+            <div class="filter-row">
+              <span class="filter-label">🎯 GPU Score</span>
+              <button
+                class="filter-chip score-chip active"
+                data-val="0"
+                onclick="setMin('gpuScore', 0, '.score-chip', this)"
+              >
+                Any
+              </button>
+              <button
+                class="filter-chip score-chip"
+                data-val="5000"
+                onclick="setMin('gpuScore', 5000, '.score-chip', this)"
+              >
+                5K+
+              </button>
+              <button
+                class="filter-chip score-chip"
+                data-val="10000"
+                onclick="setMin('gpuScore', 10000, '.score-chip', this)"
+              >
+                10K+
+              </button>
+              <button
+                class="filter-chip score-chip"
+                data-val="15000"
+                onclick="setMin('gpuScore', 15000, '.score-chip', this)"
+              >
+                15K+
+              </button>
+              <button
+                class="filter-chip score-chip"
+                data-val="20000"
+                onclick="setMin('gpuScore', 20000, '.score-chip', this)"
+              >
+                20K+
+              </button>
+            </div>
+            <div class="filter-row">
+              <span class="filter-label">💾 RAM</span>
+              <button
+                class="filter-chip ram-chip active"
+                data-val="0"
+                onclick="setMin('ram', 0, '.ram-chip', this)"
+              >
+                Any
+              </button>
+              <button
+                class="filter-chip ram-chip"
+                data-val="8"
+                onclick="setMin('ram', 8, '.ram-chip', this)"
+              >
+                8GB+
+              </button>
+              <button
+                class="filter-chip ram-chip"
+                data-val="16"
+                onclick="setMin('ram', 16, '.ram-chip', this)"
+              >
+                16GB+
+              </button>
+              <button
+                class="filter-chip ram-chip"
+                data-val="32"
+                onclick="setMin('ram', 32, '.ram-chip', this)"
+              >
+                32GB+
+              </button>
+              <button
+                class="filter-chip ram-chip"
+                data-val="64"
+                onclick="setMin('ram', 64, '.ram-chip', this)"
+              >
+                64GB+
+              </button>
+            </div>
+            <div class="filter-row">
+              <span class="filter-label">🔋 Battery</span>
+              <button
+                class="filter-chip bat-chip active"
+                data-val="0"
+                onclick="setMin('battery', 0, '.bat-chip', this)"
+              >
+                Any
+              </button>
+              <button
+                class="filter-chip bat-chip"
+                data-val="6"
+                onclick="setMin('battery', 6, '.bat-chip', this)"
+              >
+                6h+
+              </button>
+              <button
+                class="filter-chip bat-chip"
+                data-val="10"
+                onclick="setMin('battery', 10, '.bat-chip', this)"
+              >
+                10h+
+              </button>
+              <button
+                class="filter-chip bat-chip"
+                data-val="14"
+                onclick="setMin('battery', 14, '.bat-chip', this)"
+              >
+                14h+
+              </button>
+              <button
+                class="filter-chip bat-chip"
+                data-val="18"
+                onclick="setMin('battery', 18, '.bat-chip', this)"
+              >
+                18h+
+              </button>
+            </div>
+            <div class="filter-row" id="brandFilterRow">
+              <span class="filter-label">🏷️ Brand</span>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-grid" id="laptopGrid"></div>
+      </section>
+
+      <footer class="footer">
+        <span class="glow-icon">⚡</span>
+        <span>SpecDuel — Built by Mux / Kosmada</span>
+      </footer>
+    </div>
+
+    <!-- DUEL BAR -->
+    <div class="duel-bar hidden" id="duelBar">
+      <div class="duel-bar-text" id="duelBarText">
+        ⚔️ Select 2 laptops to duel
+      </div>
+      <div class="duel-bar-slots">
+        <div class="duel-slot" id="slot1">Empty</div>
+        <div
+          style="
+            color: #eab308;
+            font-family: &quot;Orbitron&quot;, sans-serif;
+            font-size: 0.8rem;
+          "
+        >
+          VS
+        </div>
+        <div class="duel-slot" id="slot2">Empty</div>
+      </div>
+      <div class="duel-bar-actions">
+        <button
+          class="start-duel-btn hidden"
+          id="startDuelBtn"
+          onclick="startDuel()"
+        >
+          ⚔️ START DUEL
+        </button>
+        <button class="clear-duel-btn" onclick="resetDuel()">✕ Clear</button>
+      </div>
+    </div>
+
+    <!-- DUEL SCREEN -->
+    <div class="duel-screen hidden" id="duelScreen"></div>
+
+    <script>
+      const searchInput = document.getElementById("searchInput");
+      const cardGrid = document.getElementById("cardGrid");
+      const laptopView = document.getElementById("laptopView");
+      const laptopGrid = document.getElementById("laptopGrid");
+      const laptopHeading = document.getElementById("laptopHeading");
+      const laptopDescription = document.getElementById("laptopDescription");
+      const backButton = document.getElementById("backButton");
+
+      // ── AFFILIATE CONFIG — swap these when approved ──
+      const AMAZON_TAG = "muxdev7772-20";
+      const EBAY_CAMPAIGN = "5339089845";
+
+      let laptops = [];
+      let activeCategory = null;
+      let duelSelection = [];
+      window._currentLaptopItems = [];
+      let currentSort = "default";
+      let activeFilters = {
+        priceMin: 0,
+        priceMax: 999999,
+        gpuType: "",
+        gpuScoreMin: 0,
+        ramMin: 0,
+        batteryMin: 0,
+        brands: new Set(),
+      };
+
+      const categoryColor = {
+        "Gaming Beast": "red",
+        "Workstation Pro": "purple",
+        "Thin & Light": "blue",
+        Unbreakable: "green",
+        "Desktop Replacement": "orange",
+        "Best Bang for Buck": "yellow",
+        "Creator Studio": "pink",
+        "Battery Champion": "cyan",
+      };
+
+      // ── AFFILIATE BUY LINKS ──
+      function makeBuyLinks(brand, model) {
+        const q = encodeURIComponent(brand + " " + model);
+        const amazonUrl =
+          "https://www.amazon.com/s?k=" + q + "&tag=" + AMAZON_TAG;
+        const ebayUrl =
+          "https://www.ebay.com/sch/i.html?_nkw=" +
+          q +
+          "&mkevt=1&mkcid=1&mkrid=711-53200-19255-0&campid=" +
+          EBAY_CAMPAIGN;
+        return `
+          <div class="buy-buttons">
+            <a href="${amazonUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-amazon">🛒 Amazon</a>
+            <a href="${ebayUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-ebay">🏷️ eBay</a>
+          </div>`;
+      }
+
+      // ── FILTER & SORT ──
+      function applyFiltersAndSort(items) {
+        let r = items.filter((l) => {
+          const p = l.price_usd || 0;
+          if (p < activeFilters.priceMin || p > activeFilters.priceMax)
+            return false;
+          if (activeFilters.gpuType && l.gpu_type !== activeFilters.gpuType)
+            return false;
+          if ((l.gpu_score || 0) < activeFilters.gpuScoreMin) return false;
+          if (parseRAM(l.ram) < activeFilters.ramMin) return false;
+          if ((l.battery_hours || 0) < activeFilters.batteryMin) return false;
+          if (
+            activeFilters.brands.size > 0 &&
+            !activeFilters.brands.has(l.brand)
+          )
+            return false;
+          return true;
+        });
+        switch (currentSort) {
+          case "price-asc":
+            r.sort((a, b) => (a.price_usd || 0) - (b.price_usd || 0));
+            break;
+          case "price-desc":
+            r.sort((a, b) => (b.price_usd || 0) - (a.price_usd || 0));
+            break;
+          case "gpu-desc":
+            r.sort((a, b) => (b.gpu_score || 0) - (a.gpu_score || 0));
+            break;
+          case "battery-desc":
+            r.sort((a, b) => (b.battery_hours || 0) - (a.battery_hours || 0));
+            break;
+          case "ram-desc":
+            r.sort((a, b) => parseRAM(b.ram) - parseRAM(a.ram));
+            break;
+          case "weight-asc":
+            r.sort((a, b) => parseWeight(a.weight) - parseWeight(b.weight));
+            break;
+          case "name-asc":
+            r.sort((a, b) =>
+              (a.brand + a.model).localeCompare(b.brand + b.model),
+            );
+            break;
+        }
+        return r;
+      }
+
+      function toggleFilterPanel() {
+        const panel = document.getElementById("filterPanel");
+        const btn = document.getElementById("filterToggleBtn");
+        panel.classList.toggle("hidden");
+        btn.classList.toggle("open");
+      }
+
+      function setPrice(min, max, el) {
+        activeFilters.priceMin = min;
+        activeFilters.priceMax = max;
+        document
+          .querySelectorAll(".price-chip")
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+        refreshView();
+        updateFilterBadge();
+      }
+
+      function setGpuType(val, el) {
+        activeFilters.gpuType = val;
+        document
+          .querySelectorAll(".gputype-chip")
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+        refreshView();
+        updateFilterBadge();
+      }
+
+      function setMin(key, val, selector, el) {
+        if (key === "gpuScore") activeFilters.gpuScoreMin = val;
+        else if (key === "ram") activeFilters.ramMin = val;
+        else if (key === "battery") activeFilters.batteryMin = val;
+        document
+          .querySelectorAll(selector)
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+        refreshView();
+        updateFilterBadge();
+      }
+
+      function toggleBrand(brand, el) {
+        if (activeFilters.brands.has(brand)) {
+          activeFilters.brands.delete(brand);
+          el.classList.remove("brand-active");
+        } else {
+          activeFilters.brands.add(brand);
+          el.classList.add("brand-active");
+        }
+        refreshView();
+        updateFilterBadge();
+      }
+
+      function clearAllFilters() {
+        activeFilters = {
+          priceMin: 0,
+          priceMax: 999999,
+          gpuType: "",
+          gpuScoreMin: 0,
+          ramMin: 0,
+          batteryMin: 0,
+          brands: new Set(),
+        };
+        currentSort = "default";
+        document.getElementById("sortSelect").value = "default";
+        document
+          .querySelectorAll(".filter-chip")
+          .forEach((c) => c.classList.remove("active", "brand-active"));
+        document
+          .querySelectorAll(".price-chip[data-price-max='999999']")
+          .forEach((c) => c.classList.add("active"));
+        document
+          .querySelectorAll(".gputype-chip[data-val='']")
+          .forEach((c) => c.classList.add("active"));
+        document
+          .querySelectorAll(
+            ".score-chip[data-val='0'], .ram-chip[data-val='0'], .bat-chip[data-val='0']",
+          )
+          .forEach((c) => c.classList.add("active"));
+        refreshView();
+        updateFilterBadge();
+      }
+
+      function updateFilterBadge() {
+        let count = 0;
+        if (activeFilters.priceMin > 0 || activeFilters.priceMax < 999999)
+          count++;
+        if (activeFilters.gpuType) count++;
+        if (activeFilters.gpuScoreMin > 0) count++;
+        if (activeFilters.ramMin > 0) count++;
+        if (activeFilters.batteryMin > 0) count++;
+        count += activeFilters.brands.size;
+        const badge = document.getElementById("filterCountBadge");
+        const clearBtn = document.getElementById("clearFiltersBtn");
+        badge.textContent = count;
+        badge.classList.toggle("hidden", count === 0);
+        clearBtn.classList.toggle(
+          "hidden",
+          count === 0 && currentSort === "default",
+        );
+      }
+
+      function refreshView() {
+        if (activeCategory) openCategory(activeCategory);
+        else if (searchInput.value.trim()) updateSearch();
+      }
+
+      function populateBrandFilter() {
+        const brands = [...new Set(laptops.map((l) => l.brand))].sort();
+        const row = document.getElementById("brandFilterRow");
+        brands.forEach((brand) => {
+          const btn = document.createElement("button");
+          btn.className = "filter-chip";
+          btn.textContent = brand;
+          btn.onclick = () => toggleBrand(brand, btn);
+          row.appendChild(btn);
+        });
+      }
+
+      // ── PARSE HELPERS ──
+      function parseRAM(s) {
+        return parseFloat(s) || 0;
+      }
+      function parseGHz(s) {
+        return parseFloat(s) || 0;
+      }
+      function parseWeight(s) {
+        return parseFloat(s) || 999;
+      }
+      function parseStorage(s) {
+        s = (s || "").toLowerCase();
+        let total = 0;
+        const tb = s.match(/(\d+(\.\d+)?)\s*tb/g);
+        const gb = s.match(/(\d+(\.\d+)?)\s*gb/g);
+        if (tb)
+          tb.forEach((m) => {
+            const n = parseFloat(m);
+            if (n) total += n * 1000;
+          });
+        if (gb)
+          gb.forEach((m) => {
+            const n = parseFloat(m);
+            if (n) total += n;
+          });
+        return total;
+      }
+
+      // ── DUEL LOGIC ──
+      function handleDuelBtn(idx) {
+        const laptop = window._currentLaptopItems[idx];
+        if (!laptop) return;
+        const key = laptop.brand + "||" + laptop.model;
+        const existing = duelSelection.findIndex(
+          (l) => l.brand + "||" + l.model === key,
+        );
+        if (existing !== -1) {
+          duelSelection.splice(existing, 1);
+        } else if (duelSelection.length >= 2) {
+          duelSelection[0] = duelSelection[1];
+          duelSelection[1] = laptop;
+        } else {
+          duelSelection.push(laptop);
+        }
+        updateDuelBar();
+        updateDuelButtons();
+      }
+
+      function updateDuelBar() {
+        const bar = document.getElementById("duelBar");
+        const startBtn = document.getElementById("startDuelBtn");
+        const slot1 = document.getElementById("slot1");
+        const slot2 = document.getElementById("slot2");
+
+        if (duelSelection.length === 0) {
+          bar.classList.add("hidden");
+          return;
+        }
+        bar.classList.remove("hidden");
+
+        slot1.textContent = duelSelection[0]
+          ? duelSelection[0].brand + " " + duelSelection[0].model
+          : "Empty";
+        slot1.className = "duel-slot" + (duelSelection[0] ? " filled" : "");
+        slot2.textContent = duelSelection[1]
+          ? duelSelection[1].brand + " " + duelSelection[1].model
+          : "Pick one more...";
+        slot2.className = "duel-slot" + (duelSelection[1] ? " filled" : "");
+
+        if (duelSelection.length === 2) {
+          startBtn.classList.remove("hidden");
+        } else {
+          startBtn.classList.add("hidden");
+        }
+      }
+
+      function updateDuelButtons() {
+        document.querySelectorAll(".add-duel-btn").forEach((btn) => {
+          const brand = btn.dataset.brand;
+          const model = btn.dataset.model;
+          const isSelected = duelSelection.find(
+            (l) => l.brand === brand && l.model === model,
+          );
+          btn.textContent = isSelected ? "✓ In Duel" : "⚔️ Add to Duel";
+          btn.className = "add-duel-btn" + (isSelected ? " in-duel" : "");
+        });
+      }
+
+      function startDuel() {
+        if (duelSelection.length < 2) return;
+        const a = duelSelection[0];
+        const b = duelSelection[1];
+
+        const ramA = parseRAM(a.ram),
+          ramB = parseRAM(b.ram);
+        const ghzA = parseGHz(a.cpu_ghz),
+          ghzB = parseGHz(b.cpu_ghz);
+        const wgtA = parseWeight(a.weight),
+          wgtB = parseWeight(b.weight);
+        const stoA = parseStorage(a.storage),
+          stoB = parseStorage(b.storage);
+        const priA = a.price_usd || 0,
+          priB = b.price_usd || 0;
+        const batA = a.battery_hours || 0,
+          batB = b.battery_hours || 0;
+        const gpuA = a.gpu_score || 0,
+          gpuB = b.gpu_score || 0;
+
+        let winsA = 0,
+          winsB = 0;
+        if (ramA > ramB) winsA++;
+        else if (ramB > ramA) winsB++;
+        if (ghzA > ghzB) winsA++;
+        else if (ghzB > ghzA) winsB++;
+        if (wgtA < wgtB) winsA++;
+        else if (wgtB < wgtA) winsB++;
+        if (stoA > stoB) winsA++;
+        else if (stoB > stoA) winsB++;
+        if (priA < priB) winsA++;
+        else if (priB < priA) winsB++;
+        if (batA > batB) winsA++;
+        else if (batB > batA) winsB++;
+        if (gpuA > gpuB) winsA++;
+        else if (gpuB > gpuA) winsB++;
+
+        const winner = winsA > winsB ? a : winsB > winsA ? b : null;
+        const colorA = categoryColor[a.category] || "blue";
+        const colorB = categoryColor[b.category] || "blue";
+
+        let verdict = "";
+        if (!winner) {
+          verdict =
+            "It's a dead tie! These machines are almost perfectly matched across the board.";
+        } else {
+          const adv = [];
+          const w = winner;
+          if ((w === a && ramA > ramB) || (w === b && ramB > ramA))
+            adv.push("more RAM");
+          if ((w === a && ghzA > ghzB) || (w === b && ghzB > ghzA))
+            adv.push("faster CPU");
+          if ((w === a && wgtA < wgtB) || (w === b && wgtB < wgtA))
+            adv.push("lighter build");
+          if ((w === a && stoA > stoB) || (w === b && stoB > stoA))
+            adv.push("more storage");
+          if ((w === a && priA < priB) || (w === b && priB < priA))
+            adv.push("better value");
+          if ((w === a && batA > batB) || (w === b && batB > batA))
+            adv.push("longer battery");
+          if ((w === a && gpuA > gpuB) || (w === b && gpuB > gpuA))
+            adv.push("stronger GPU");
+          verdict = `${w.brand} ${w.model} takes the win on ${adv.join(", ")}.`;
+        }
+
+        function specRow(label, valA, valB, aWins, tie) {
+          const ca = tie ? "" : aWins ? "spec-win" : "spec-lose";
+          const cb = tie ? "" : aWins ? "spec-lose" : "spec-win";
+          return `<div class="spec-row">
+            <div class="spec-val ${ca}">${valA}</div>
+            <div class="spec-label">${label}</div>
+            <div class="spec-val ${cb}">${valB}</div>
+          </div>`;
+        }
+
+        const fmt = (n) =>
+          "$" +
+          (n || 0).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+
+        const screen = document.getElementById("duelScreen");
+        screen.innerHTML = `
+          <div class="duel-inner">
+            <div class="duel-title">⚔️ SPEC<span>DUEL</span></div>
+            <div class="duel-columns">
+              <div class="duel-col ${winsA > winsB ? "col-winner" : winsB > winsA ? "col-loser" : ""}">
+                <div class="duel-col-brand ${colorA}-text">${a.brand}</div>
+                <div class="duel-col-model">${a.model}</div>
+                <div class="duel-col-category">${a.category}</div>
+              </div>
+              <div class="duel-vs">VS</div>
+              <div class="duel-col ${winsB > winsA ? "col-winner" : winsA > winsB ? "col-loser" : ""}">
+                <div class="duel-col-brand ${colorB}-text">${b.brand}</div>
+                <div class="duel-col-model">${b.model}</div>
+                <div class="duel-col-category">${b.category}</div>
+              </div>
+            </div>
+            <div class="spec-table">
+              ${specRow("💾 RAM", a.ram, b.ram, ramA > ramB, ramA === ramB)}
+              ${specRow("⚡ CPU Speed", a.cpu_ghz, b.cpu_ghz, ghzA > ghzB, ghzA === ghzB)}
+              ${specRow("🎮 GPU Score", gpuA.toLocaleString(), gpuB.toLocaleString(), gpuA > gpuB, gpuA === gpuB)}
+              ${specRow("🎯 VRAM", a.vram || "Shared", b.vram || "Shared", false, true)}
+              ${specRow("🔋 Battery", (batA || "?") + "h", (batB || "?") + "h", batA > batB, batA === batB)}
+              ${specRow("🖥️ Screen", a.screen, b.screen, false, true)}
+              ${specRow("💿 Storage", a.storage, b.storage, stoA > stoB, stoA === stoB)}
+              ${specRow("⚖️ Weight", a.weight, b.weight, wgtA < wgtB, wgtA === wgtB)}
+              ${specRow("💰 Price (USD)", fmt(priA), fmt(priB), priA < priB, priA === priB)}
+            </div>
+            <div class="duel-verdict">
+              <div class="verdict-trophy">${winner ? "🏆" : "🤝"}</div>
+              <div class="verdict-label">OVERALL WINNER</div>
+              <div class="verdict-winner">${winner ? winner.brand + " " + winner.model : "TIE GAME"}</div>
+              <div class="verdict-text">${verdict}</div>
+              <div class="verdict-score">${winsA} — ${winsB}</div>
+            </div>
+            <div class="duel-winner-buy" id="duelWinnerBuy"></div>
+            <div class="duel-actions">
+              <button class="duel-btn" onclick="resetDuel()">🔄 New Duel</button>
+              <button class="duel-btn secondary" onclick="closeDuel()">← Back to Browse</button>
+            </div>
+          </div>`;
+        screen.classList.remove("hidden");
+        const buyTarget = winner || a;
+        document.getElementById("duelWinnerBuy").innerHTML = `
+          <p style="text-align:center;color:#6b7280;font-size:0.82rem;letter-spacing:0.08em;font-family:Rajdhani,sans-serif;text-transform:uppercase;margin:0 0 10px">Buy the winner</p>
+          ${makeBuyLinks(buyTarget.brand, buyTarget.model)}`;
+      }
+
+      function resetDuel() {
+        duelSelection = [];
+        updateDuelBar();
+        closeDuel();
+        updateDuelButtons();
+      }
+
+      function closeDuel() {
+        document.getElementById("duelScreen").classList.add("hidden");
+        updateDuelButtons();
+      }
+
+      // ── VIEW LOGIC ──
+      function setVisibleSection(showLaptops) {
+        if (showLaptops) {
+          cardGrid.style.display = "none";
+          laptopView.classList.remove("hidden");
+        } else {
+          laptopView.classList.add("hidden");
+          cardGrid.style.display = "grid";
+        }
+      }
+
+      function renderLaptopCards(items) {
+        window._currentLaptopItems = items || [];
+        if (!items || items.length === 0) {
+          laptopGrid.innerHTML = `<div class="no-results">No laptops found. Try a different search or category.</div>`;
+          return;
+        }
+        laptopGrid.innerHTML = items
+          .map((laptop, i) => {
+            const colorClass = categoryColor[laptop.category] || "blue";
+            const isSelected = duelSelection.find(
+              (l) => l.brand === laptop.brand && l.model === laptop.model,
+            );
+            const safeBrand = (laptop.brand || "").replace(/"/g, "&quot;");
+            const safeModel = (laptop.model || "").replace(/"/g, "&quot;");
+            return `
+            <article class="laptop-card ${colorClass}">
+              <div class="laptop-brand">${laptop.brand}</div>
+              <h3 class="laptop-title">${laptop.model}</h3>
+              <div class="laptop-specs">
+                <span>🖥️ ${laptop.screen} • ${laptop.resolution}</span>
+                <span>💾 ${laptop.ram}</span>
+                <span>⚡ ${laptop.cpu} @ ${laptop.cpu_ghz}</span>
+                <span>🎮 ${laptop.gpu} <span class="gpu-badge ${(laptop.gpu_type || "iGPU") === "dGPU" ? "badge-dgpu" : "badge-igpu"}">${laptop.gpu_type || "iGPU"}</span></span>
+                <span>🎯 VRAM: ${laptop.vram || "Shared"}</span>
+                <span>🔋 ${laptop.battery_hours ? laptop.battery_hours + "h battery" : "N/A"}</span>
+                <span>⚖️ ${laptop.weight}</span>
+                <span>💿 ${laptop.storage}</span>
+              </div>
+              <div class="laptop-price">${"$" + (laptop.price_usd || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              ${makeBuyLinks(laptop.brand, laptop.model)}
+              <button class="add-duel-btn ${isSelected ? "in-duel" : ""}"
+                data-brand="${safeBrand}" data-model="${safeModel}"
+                onclick="event.stopPropagation();handleDuelBtn(${i})">
+                ${isSelected ? "✓ In Duel" : "⚔️ Add to Duel"}
+              </button>
+            </article>`;
+          })
+          .join("");
+      }
+
+      function openCategory(category) {
+        activeCategory = category;
+        const base = laptops.filter((l) => l.category === category);
+        const filtered = applyFiltersAndSort(base);
+        laptopHeading.textContent = category;
+        document.getElementById("resultsCount").textContent =
+          filtered.length + " of " + base.length + " laptops";
+        laptopDescription.textContent = "";
+        renderLaptopCards(filtered);
+        setVisibleSection(true);
+      }
+
+      function resetView() {
+        activeCategory = null;
+        searchInput.value = "";
+        setVisibleSection(false);
+      }
+
+      function updateSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          if (activeCategory) {
+            openCategory(activeCategory);
+          } else {
+            resetView();
+          }
+          return;
+        }
+        const base = laptops.filter(
+          ({ brand, model }) =>
+            brand.toLowerCase().includes(query) ||
+            model.toLowerCase().includes(query),
+        );
+        const matched = applyFiltersAndSort(base);
+        laptopHeading.textContent = "Search results";
+        document.getElementById("resultsCount").textContent =
+          matched.length + " of " + base.length + " results";
+        laptopDescription.textContent = "";
+        renderLaptopCards(matched);
+        setVisibleSection(true);
+      }
+
+      backButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        resetView();
+      });
+      searchInput.addEventListener("input", updateSearch);
+      document.getElementById("sortSelect").addEventListener("change", (e) => {
+        currentSort = e.target.value;
+        const clearBtn = document.getElementById("clearFiltersBtn");
+        clearBtn.classList.toggle(
+          "hidden",
+          currentSort === "default" &&
+            !document.getElementById("filterCountBadge").textContent,
+        );
+        updateFilterBadge();
+        refreshView();
+      });
+
+      fetch("laptops_2.json")
+        .then((r) => {
+          if (!r.ok) throw new Error();
+          return r.json();
+        })
+        .then((data) => {
+          laptops = Array.isArray(data) ? data : [];
+          populateBrandFilter();
+        })
+        .catch(() => {
+          laptops = [];
+        });
+
+      document.querySelectorAll("#cardGrid .card").forEach((card) => {
+        card.addEventListener("click", () => openCategory(card.dataset.title));
+      });
+    </script>
+  </body>
+</html>
