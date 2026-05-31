@@ -1311,7 +1311,8 @@
       // ── AFFILIATE BUY LINKS ──
       function makeBuyLinks(brand, model) {
         const q = encodeURIComponent(brand + " " + model);
-        const amazonUrl = "https://www.amazon.com/s?k=" + q + "&tag=" + AMAZON_TAG;
+        const amazonUrl =
+          "https://www.amazon.com/s?k=" + q + "&tag=" + AMAZON_TAG;
         return `
           <div class="buy-buttons">
             <a href="${amazonUrl}" target="_blank" rel="noopener" class="buy-btn buy-btn-amazon" style="flex:none;width:100%">🛒 Buy on Amazon</a>

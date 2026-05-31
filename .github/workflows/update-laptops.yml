@@ -1,14 +1,13 @@
-name: Auto-Update Laptop Library
+﻿name: Auto-Update Laptop Library
 
 on:
   schedule:
-    - cron: '0 6 * * 1'   # Every Monday at 6am UTC
-  workflow_dispatch:        # Also allows manual trigger from GitHub UI
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -19,12 +18,11 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pandas kaggle requests
+        run: pip install pandas kaggle
 
       - name: Download latest laptop dataset from Kaggle
         env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
         run: |
           kaggle datasets download -d juanmerinobermejo/laptops-price-dataset --unzip -p .
           ls -la *.csv
@@ -32,10 +30,10 @@ jobs:
       - name: Run categorize.py to merge new laptops
         run: python categorize.py
 
-      - name: Commit and push if laptops_2.json changed
+      - name: Commit and push if changed
         run: |
           git config user.name "SpecDuel Bot"
           git config user.email "bot@specduel.com"
           git add laptops_2.json
-          git diff --cached --quiet || git commit -m "Auto-update laptop library [$(date +'%Y-%m-%d')]"
+          git diff --cached --quiet && echo "No changes" || git commit -m "Auto-update laptop library [$(date +%Y-%m-%d)]"
           git push
