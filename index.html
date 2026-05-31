@@ -1843,8 +1843,11 @@
 
       // ── FILTER & SORT ──
       function applyFiltersAndSort(items) {
+        const priceFilterActive = activeFilters.priceMin > 0 || activeFilters.priceMax < 999999;
         let r = items.filter((l) => {
           const p = l.price_usd || 0;
+          // If a price filter is active, exclude laptops with no price data
+          if (priceFilterActive && p <= 0) return false;
           if (p < activeFilters.priceMin || p > activeFilters.priceMax)
             return false;
           if (activeFilters.gpuType && l.gpu_type !== activeFilters.gpuType)
@@ -1861,10 +1864,22 @@
         });
         switch (currentSort) {
           case "price-asc":
-            r.sort((a, b) => (a.price_usd || 0) - (b.price_usd || 0));
+            r.sort((a, b) => {
+              const pa = a.price_usd || 0, pb = b.price_usd || 0;
+              if (!pa && !pb) return 0;
+              if (!pa) return 1;  // no price → end
+              if (!pb) return -1;
+              return pa - pb;
+            });
             break;
           case "price-desc":
-            r.sort((a, b) => (b.price_usd || 0) - (a.price_usd || 0));
+            r.sort((a, b) => {
+              const pa = a.price_usd || 0, pb = b.price_usd || 0;
+              if (!pa && !pb) return 0;
+              if (!pa) return 1;  // no price → end
+              if (!pb) return -1;
+              return pb - pa;
+            });
             break;
           case "gpu-desc":
             r.sort((a, b) => (b.gpu_score || 0) - (a.gpu_score || 0));
@@ -2013,10 +2028,13 @@
         return parseFloat(s) || 0;
       }
       function parseWeight(s) {
+        if (!s || !s.trim()) return 999; // unknown → sorts to end
         return parseFloat(s) || 999;
       }
       function parseStorage(s) {
-        s = (s || "").toLowerCase();
+        s = (s || "").toLowerCase().trim();
+        // Plain number with no unit → treat as GB
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s);
         let total = 0;
         const tb = s.match(/(\d+(\.\d+)?)\s*tb/g);
         const gb = s.match(/(\d+(\.\d+)?)\s*gb/g);
@@ -2031,6 +2049,19 @@
             if (n) total += n;
           });
         return total;
+      }
+
+      // ── DISPLAY HELPERS ──
+      function displayPrice(p) {
+        if (!p || p <= 0) return null; // null = no price data
+        return "$" + p.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      function normalizeStorage(s) {
+        if (!s || !s.trim()) return "N/A";
+        s = s.trim();
+        // Plain number with no unit → treat as GB
+        if (/^\d+(\.\d+)?$/.test(s)) return s + " GB";
+        return s;
       }
 
       // ── DUEL LOGIC ──
@@ -2117,14 +2148,23 @@
           winsB = 0;
         if (ramA > ramB) winsA++;
         else if (ramB > ramA) winsB++;
-        if (ghzA > ghzB) winsA++;
-        else if (ghzB > ghzA) winsB++;
-        if (wgtA < wgtB) winsA++;
-        else if (wgtB < wgtA) winsB++;
+        // Only score CPU GHz if both have valid data
+        if (ghzA > 0 && ghzB > 0) {
+          if (ghzA > ghzB) winsA++;
+          else if (ghzB > ghzA) winsB++;
+        }
+        // Only score weight if both have valid data (999 = unknown)
+        if (wgtA < 999 && wgtB < 999) {
+          if (wgtA < wgtB) winsA++;
+          else if (wgtB < wgtA) winsB++;
+        }
         if (stoA > stoB) winsA++;
         else if (stoB > stoA) winsB++;
-        if (priA < priB) winsA++;
-        else if (priB < priA) winsB++;
+        // Only score price if both have valid prices
+        if (priA > 0 && priB > 0) {
+          if (priA < priB) winsA++;
+          else if (priB < priA) winsB++;
+        }
         if (batA > batB) winsA++;
         else if (batB > batA) winsB++;
         if (gpuA > gpuB) winsA++;
@@ -2167,12 +2207,11 @@
           </div>`;
         }
 
-        const fmt = (n) =>
-          "$" +
-          (n || 0).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
+        const fmtPrice = (n) => displayPrice(n) || "N/A";
+        const fmtGhz = (s) => (s && s.trim()) ? s : "N/A";
+        const fmtWeight = (s) => (s && s.trim()) ? s : "N/A";
+        const fmtScreen = (s) => (s && s.trim() && s.trim() !== '"') ? s : "N/A";
+        const fmtBat = (n) => n ? n + "h" : "N/A";
 
         const screen = document.getElementById("duelScreen");
         screen.innerHTML = `
@@ -2192,15 +2231,15 @@
               </div>
             </div>
             <div class="spec-table">
-              ${specRow(t("specRam"), a.ram, b.ram, ramA > ramB, ramA === ramB)}
-              ${specRow(t("specCpu"), a.cpu_ghz, b.cpu_ghz, ghzA > ghzB, ghzA === ghzB)}
-              ${specRow(t("specGpu"), gpuA.toLocaleString(), gpuB.toLocaleString(), gpuA > gpuB, gpuA === gpuB)}
+              ${specRow(t("specRam"), a.ram || "N/A", b.ram || "N/A", ramA > ramB, ramA === ramB)}
+              ${specRow(t("specCpu"), fmtGhz(a.cpu_ghz), fmtGhz(b.cpu_ghz), ghzA > ghzB, ghzA === ghzB || !ghzA || !ghzB)}
+              ${specRow(t("specGpu"), gpuA ? gpuA.toLocaleString() : "N/A", gpuB ? gpuB.toLocaleString() : "N/A", gpuA > gpuB, gpuA === gpuB)}
               ${specRow(t("specVram"), a.vram || "Shared", b.vram || "Shared", false, true)}
-              ${specRow(t("specBattery"), (batA || "?") + "h", (batB || "?") + "h", batA > batB, batA === batB)}
-              ${specRow(t("specScreen"), a.screen, b.screen, false, true)}
-              ${specRow(t("specStorage"), a.storage, b.storage, stoA > stoB, stoA === stoB)}
-              ${specRow(t("specWeight"), a.weight, b.weight, wgtA < wgtB, wgtA === wgtB)}
-              ${specRow(t("specPrice"), fmt(priA), fmt(priB), priA < priB, priA === priB)}
+              ${specRow(t("specBattery"), fmtBat(batA), fmtBat(batB), batA > batB, batA === batB)}
+              ${specRow(t("specScreen"), fmtScreen(a.screen), fmtScreen(b.screen), false, true)}
+              ${specRow(t("specStorage"), normalizeStorage(a.storage), normalizeStorage(b.storage), stoA > stoB, stoA === stoB)}
+              ${specRow(t("specWeight"), fmtWeight(a.weight), fmtWeight(b.weight), wgtA < wgtB, wgtA === wgtB || wgtA === 999 || wgtB === 999)}
+              ${specRow(t("specPrice"), fmtPrice(priA), fmtPrice(priB), priA > 0 && priB > 0 && priA < priB, priA === priB || !priA || !priB)}
             </div>
             <div class="duel-verdict">
               <div class="verdict-trophy">${winner ? "🏆" : "🤝"}</div>
@@ -2259,21 +2298,38 @@
             );
             const safeBrand = (laptop.brand || "").replace(/"/g, "&quot;");
             const safeModel = (laptop.model || "").replace(/"/g, "&quot;");
+
+            // Defensive display helpers per card
+            const screenVal = (laptop.screen && laptop.screen.trim() && laptop.screen.trim() !== '"') ? laptop.screen.trim() : "";
+            const resVal = (laptop.resolution && laptop.resolution.trim()) ? laptop.resolution.trim() : "";
+            const screenLine = [screenVal, resVal].filter(Boolean).join(" • ") || "N/A";
+            const cpuLine = laptop.cpu_ghz && laptop.cpu_ghz.trim()
+              ? `${laptop.cpu || "N/A"} @ ${laptop.cpu_ghz}`
+              : (laptop.cpu || "N/A");
+            const gpuBadge = `<span class="gpu-badge ${(laptop.gpu_type || "iGPU") === "dGPU" ? "badge-dgpu" : "badge-igpu"}">${laptop.gpu_type || "iGPU"}</span>`;
+            const gpuLine = (laptop.gpu && laptop.gpu.trim()) ? `${laptop.gpu} ${gpuBadge}` : `N/A ${gpuBadge}`;
+            const weightLine = (laptop.weight && laptop.weight.trim()) ? laptop.weight : "N/A";
+            const storageLine = normalizeStorage(laptop.storage);
+            const priceStr = displayPrice(laptop.price_usd);
+            const priceHtml = priceStr
+              ? `<div class="laptop-price">${priceStr}</div>`
+              : `<div class="laptop-price" style="color:#6b7280;font-size:1rem">Price N/A</div>`;
+
             return `
             <article class="laptop-card ${colorClass}">
               <div class="laptop-brand">${laptop.brand}</div>
               <h3 class="laptop-title">${laptop.model}</h3>
               <div class="laptop-specs">
-                <span>🖥️ ${laptop.screen} • ${laptop.resolution}</span>
-                <span>💾 ${laptop.ram}</span>
-                <span>⚡ ${laptop.cpu} @ ${laptop.cpu_ghz}</span>
-                <span>🎮 ${laptop.gpu} <span class="gpu-badge ${(laptop.gpu_type || "iGPU") === "dGPU" ? "badge-dgpu" : "badge-igpu"}">${laptop.gpu_type || "iGPU"}</span></span>
+                <span>🖥️ ${screenLine}</span>
+                <span>💾 ${laptop.ram || "N/A"}</span>
+                <span>⚡ ${cpuLine}</span>
+                <span>🎮 ${gpuLine}</span>
                 <span>🎯 VRAM: ${laptop.vram || "Shared"}</span>
                 <span>🔋 ${laptop.battery_hours ? laptop.battery_hours + "h battery" : "N/A"}</span>
-                <span>⚖️ ${laptop.weight}</span>
-                <span>💿 ${laptop.storage}</span>
+                <span>⚖️ ${weightLine}</span>
+                <span>💿 ${storageLine}</span>
               </div>
-              <div class="laptop-price">${"$" + (laptop.price_usd || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              ${priceHtml}
               ${makeBuyLinks(laptop.brand, laptop.model)}
               <button class="add-duel-btn ${isSelected ? "in-duel" : ""}"
                 data-brand="${safeBrand}" data-model="${safeModel}"
