@@ -2140,13 +2140,20 @@
         } else {
           const adv = [];
           const w = winner;
-          if ((w === a && ramA > ramB) || (w === b && ramB > ramA)) adv.push(t("advMoreRam"));
-          if ((w === a && ghzA > ghzB) || (w === b && ghzB > ghzA)) adv.push(t("advFasterCpu"));
-          if ((w === a && wgtA < wgtB) || (w === b && wgtB < wgtA)) adv.push(t("advLighter"));
-          if ((w === a && stoA > stoB) || (w === b && stoB > stoA)) adv.push(t("advMoreStorage"));
-          if ((w === a && priA < priB) || (w === b && priB < priA)) adv.push(t("advBetterValue"));
-          if ((w === a && batA > batB) || (w === b && batB > batA)) adv.push(t("advLongerBattery"));
-          if ((w === a && gpuA > gpuB) || (w === b && gpuB > gpuA)) adv.push(t("advStrongerGpu"));
+          if ((w === a && ramA > ramB) || (w === b && ramB > ramA))
+            adv.push(t("advMoreRam"));
+          if ((w === a && ghzA > ghzB) || (w === b && ghzB > ghzA))
+            adv.push(t("advFasterCpu"));
+          if ((w === a && wgtA < wgtB) || (w === b && wgtB < wgtA))
+            adv.push(t("advLighter"));
+          if ((w === a && stoA > stoB) || (w === b && stoB > stoA))
+            adv.push(t("advMoreStorage"));
+          if ((w === a && priA < priB) || (w === b && priB < priA))
+            adv.push(t("advBetterValue"));
+          if ((w === a && batA > batB) || (w === b && batB > batA))
+            adv.push(t("advLongerBattery"));
+          if ((w === a && gpuA > gpuB) || (w === b && gpuB > gpuA))
+            adv.push(t("advStrongerGpu"));
           verdict = t("verdictWinText")(w.brand, w.model, adv.join(", "));
         }
 
@@ -2315,8 +2322,9 @@
         );
         const matched = applyFiltersAndSort(base);
         laptopHeading.textContent = t("searchResults");
-        document.getElementById("resultsCount").textContent =
-          t("resultsSearch")(matched.length, base.length);
+        document.getElementById("resultsCount").textContent = t(
+          "resultsSearch",
+        )(matched.length, base.length);
         laptopDescription.textContent = "";
         renderLaptopCards(matched);
         setVisibleSection(true);
